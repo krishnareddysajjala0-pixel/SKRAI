@@ -9,8 +9,8 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Fix ImageMagick security policy to allow PDF/Text operations (required for moviepy)
-RUN sed -i 's/pixel-limit" value="16GiB"/pixel-limit" value="32GiB"/' /etc/ImageMagick-6/policy.xml && \
-    sed -i 's/domain="coder" rights="none" pattern="PDF"/domain="coder" rights="read|write" pattern="PDF"/' /etc/ImageMagick-6/policy.xml
+RUN sed -i 's/pixel-limit" value="16GiB"/pixel-limit" value="32GiB"/' /etc/ImageMagick-*/policy.xml && \
+    sed -i 's/domain="coder" rights="none" pattern="PDF"/domain="coder" rights="read|write" pattern="PDF"/' /etc/ImageMagick-*/policy.xml
 
 # Set working directory
 WORKDIR /app
