@@ -44,10 +44,9 @@ class Config:
     def _validate_env_file(self) -> None:
         env_path = os.path.join(os.getcwd(), '.env')
         if not os.path.exists(env_path):
-            raise ConfigurationError(
-                ".env file not found. Please create a .env file based on .env.example\n"
-                f"Expected location: {env_path}"
-            )
+            # Environment variables might be provided by the host (like Render)
+            # so we don't strictly require a .env file.
+            pass
     
     def _validate_configuration(self) -> None:
         errors = []
