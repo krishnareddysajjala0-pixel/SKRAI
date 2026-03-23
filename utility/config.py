@@ -51,7 +51,8 @@ class Config:
     def _validate_configuration(self) -> None:
         errors = []
         
-        llm_provider = os.getenv('LLM_PROVIDER', '').lower()
+        llm_provider = os.getenv('LLM_PROVIDER', 'gemini').lower()
+        if not llm_provider: llm_provider = 'gemini'
         if llm_provider not in ['openai', 'groq', 'gemini']:
             errors.append(
                 f"Invalid LLM_PROVIDER: '{llm_provider}'. Must be one of: openai, groq, gemini"
@@ -76,9 +77,10 @@ class Config:
                 errors.append("Missing required configuration: GEMINI_MODEL (required for LLM_PROVIDER=gemini)")
         
         if not os.getenv('PEXELS_API_KEY'):
-            errors.append("Missing required API key: PEXELS_API_KEY (always required)")
+            errors.append("Missing required API key: PEXELS_API_KEY (always required). Please provide it in .env or Render Dashboard.")
         
-        stt_provider = os.getenv('STT_PROVIDER', '').lower()
+        stt_provider = os.getenv('STT_PROVIDER', 'whisper').lower()
+        if not stt_provider: stt_provider = 'whisper'
         if stt_provider not in ['whisper', 'deepgram']:
             errors.append(
                 f"Invalid STT_PROVIDER: '{stt_provider}'. Must be one of: whisper, deepgram"
@@ -87,7 +89,8 @@ class Config:
             if not os.getenv('DEEPGRAM_API_KEY'):
                 errors.append("Missing required API key: DEEPGRAM_API_KEY (required for STT_PROVIDER=deepgram)")
         
-        tts_provider = os.getenv('TTS_PROVIDER', '').lower()
+        tts_provider = os.getenv('TTS_PROVIDER', 'edgetts').lower()
+        if not tts_provider: tts_provider = 'edgetts'
         if tts_provider not in ['edgetts', 'elevenlabs']:
             errors.append(
                 f"Invalid TTS_PROVIDER: '{tts_provider}'. Must be one of: edgetts, elevenlabs"
@@ -109,7 +112,8 @@ class Config:
             raise ConfigurationError(error_message)
     
     def get_llm_provider(self) -> Literal['openai', 'groq', 'gemini']:
-        return os.getenv('LLM_PROVIDER', '').lower()
+        provider = os.getenv('LLM_PROVIDER', 'gemini').lower()
+        return provider if provider else 'gemini'
     
     def get_llm_model(self) -> str:
         provider = self.get_llm_provider()
@@ -143,10 +147,12 @@ class Config:
         return self._llm_client
     
     def get_stt_provider(self) -> Literal['whisper', 'deepgram']:
-        return os.getenv('STT_PROVIDER', 'whisper').lower()
+        provider = os.getenv('STT_PROVIDER', 'whisper').lower()
+        return provider if provider else 'whisper'
     
     def get_tts_provider(self) -> Literal['edgetts', 'elevenlabs']:
-        return os.getenv('TTS_PROVIDER', 'edgetts').lower()
+        provider = os.getenv('TTS_PROVIDER', 'edgetts').lower()
+        return provider if provider else 'edgetts'
     
     def get_tts_voice(self) -> str:
         provider = self.get_tts_provider()
